@@ -71,7 +71,7 @@
         <version>3.0.2</version>
         <executions>
           <execution>
-            <id>copy-resources</id>
+            <id>mktmpdir</id>
             <!-- here the phase you need -->
             <phase>package</phase>
             <goals>
@@ -81,6 +81,8 @@
               <outputDirectory>${project.build.directory}/tmp/${opentsdb.package}</outputDirectory>
               <resources>
                 <resource>
+                  <directory>src/main/meta</directory>
+                  <filtering>true</filtering>
                   <includes><include>nothing</include></includes>
                 </resource>
               </resources>

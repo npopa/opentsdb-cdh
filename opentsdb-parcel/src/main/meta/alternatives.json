@@ -1,17 +1,5 @@
 {
-  "gremlin-server": {
-    "destination": "/usr/bin/gremlin-server",
-    "source": "${opentsdb.package}/bin/gremlin-server.sh",
-    "priority": 10,
-    "isDirectory": false
-  },
-  "gremlin-console": {
-    "destination": "/usr/bin/gremlin-console",
-    "source": "${opentsdb.package}/bin/gremlin.sh",
-    "priority": 10,
-    "isDirectory": false
-  },
-  "gremlin": {
+  "tsdb": {
     "destination": "/usr/bin/tsdb",
     "source": "${opentsdb.package}/usr/bin/tsdb",
     "priority": 10,
