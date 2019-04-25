@@ -13,7 +13,14 @@
             <outputDirectory>lib</outputDirectory>
             <fileMode>0755</fileMode>
             <directoryMode>0755</directoryMode>
-        </fileSet>   
+        </fileSet>
+        <fileSet>
+            <directory>target/tmp/</directory>
+            <includes>
+                <include>*.rpm</include>
+            </includes>
+            <outputDirectory>RPM</outputDirectory>
+        </fileSet>            
 		<fileSet>
 			<directory>target/tmp/${opentsdb.package}</directory>
 			<includes>

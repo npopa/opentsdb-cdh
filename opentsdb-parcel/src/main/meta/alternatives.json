@@ -7,7 +7,7 @@
   },
   "opentsdb-conf": {
     "destination": "/etc/opentsdb",
-    "source": "${opentsdb.package}/share/opentsdb/etc/opentsdb",
+    "source": "${opentsdb.package}/usr/share/opentsdb/etc/opentsdb",
     "priority": 10,
     "isDirectory": true
   }    
