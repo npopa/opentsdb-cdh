@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.npopa.samples</groupId>
+  <artifactId>opentsdb-cdh</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>opentsdb-cdh</name>
+  <description>Build a openTSDB parcel/csd for Cloudera Manager</description>
+  <properties>
+    <jdkLevel>1.7</jdkLevel>
+    <opentsdb.version>2.4.0</opentsdb.version>
+    <opentsdb.package>opentsdb-${opentsdb.version}</opentsdb.package>
+    <opentsdb.download.url>https://github.com/OpenTSDB/opentsdb/releases/download/v${opentsdb.version}/${opentsdb.package}.tar.gz</opentsdb.download.url>
+    <opentsdb.rpm.download.url>https://github.com/OpenTSDB/opentsdb/releases/download/v${opentsdb.version}/${opentsdb.package}.noarch.rpm</opentsdb.rpm.download.url>
+  </properties>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>cdh.plugin.repo</id>
+      <url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
+      <name>Cloudera Repositories</name>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+  <repositories>
+    <repository>
+      <id>cdh.repo</id>
+      <url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
+      <name>Cloudera Repositories</name>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  <modules>
+    
+    <module>opentsdb-parcel</module>
+    <module>opentsdb-csd-cm5</module>
+    <module>opentsdb-csd-cm6</module>
+  </modules>
+</project>

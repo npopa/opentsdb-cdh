@@ -1,0 +1,252 @@
+{
+    "name": "OPENTSDB",
+    "label": "openTSDB",
+    "description": "The Scalable Time Series Database. Store and serve massive amounts of time series data without losing granularity.",
+    "version": "${opentsdb.version}",
+    "runAs": {
+        "user": "opentsdb",
+        "group": "opentsdb",
+        "principal": "opentsdb"
+    },
+    "compatibility": {
+        "generation": 1,
+        "cdhVersion": {
+            "min": "5"
+        }
+    },
+    "icon": "images/opentsdb.png",
+    "parcel": {
+        "requiredTags": [
+            "opentsdb",
+            "cdh"
+        ]
+    },
+    "serviceDependencies": [
+        {
+            "name": "ZOOKEEPER"
+        },
+        {
+            "name": "HBASE"
+        },
+        {
+            "name": "SOLR"
+        }
+    ],
+    "kerberos": "${kerberos.auth.enable}",
+    "parameters": [
+        {
+            "name": "kerberos.auth.enable",
+            "label": "Enable Kerberos Authentication",
+            "description": "Enable Kerberos authentication for this openTSDB service.",
+            "type": "boolean",
+            "default": "false",
+            "configurableInWizard": true
+        }
+    ],
+    "commands": [],
+    "roles": [
+        {
+            "name": "GREMLIN_SERVER",
+            "label": "Gremlin Server",
+            "pluralLabel": "Gremlin Servers",
+            "jvmBased": "true",
+            "startRunner": {
+                "program": "scripts/control.sh",
+                "args": [
+                    "start_server"
+                ],
+                "environmentVariables": {
+                    "OPENTSDB_PRINCIPAL": "opentsdb/${host}",
+                    "KERBEROS_AUTH_ENABLED": "${kerberos.auth.enable}",
+                    "GREMLIN_SERVER_JAVA_OPTS": "${gremlin.server.java.opts}",
+                    "GREMLIN_PORT": "${gremlin.server.port}",
+                    "OPENTSDB_LOG4J": "gremlin-server-log4j.properties",
+                    "OPENTSDB_LOGDIR": "${log_dir}",
+                    "GREMLIN_SERVER_HEAP_SIZE": "${gremlin.server.heap.size}",
+                    "GREMLIN_SERVER_METRICS_PORT": "${gremlin.server.metrics.port}",
+                    "CFG_MGMT_HBASE_TABLE": "${cfg.mgmt.hbase.table}"
+                }
+            },
+            "metricsSource": {
+                "metricsFormat": "JMX",
+                "httpSource": {
+                    "httpUrl": "http://${host}:${gremlin.server.metrics.port}/jmx",
+                    "httpsUrl": "https://${host}:${gremlin.server.metrics.port}/jmx"
+                }
+            },
+            "externalLink": {
+                "name": "gremlin_server_jmx",
+                "label": "Gremlin Server Web JMX",
+                "url": "http://${host}:${gremlin.server.metrics.port}/jmx"
+            },
+            "stopRunner": {
+                "timeout": "30000"
+            },
+            "kerberosPrincipals": [
+                {
+                    "name": "OPENTSDB_PRINCIPAL",
+                    "primary": "opentsdb",
+                    "instance": "${host}"
+                }
+            ],
+            "logging": {
+                "dir": "/var/log/opentsdb",
+                "filename": "gremlin-server.log",
+                "configName": "log.dir",
+                "configFilename": "gremlin-server-log4j.properties",
+                "modifiable": true,
+                "loggingType": "log4j",
+                "additionalConfigs": []
+            },
+            "parameters": [
+                {
+                    "name": "gremlin.server.heap.size",
+                    "label": "Gremlin Server Heap Size",
+                    "description": "Heap size of the Gremlin Server.",
+                    "type": "memory",
+                    "unit": "bytes",
+                    "required": "true",
+                    "default": 1073741824
+                },
+                {
+                    "name": "gremlin.server.port",
+                    "label": "Gremlin Server Port",
+                    "description": "Gremlin Server Port Description",
+                    "type": "port",
+                    "default": "8182"
+                },
+                {
+                    "name": "gremlin.server.metrics.port",
+                    "label": "Gremlin Server Web JMX Port",
+                    "description": "Port for web JMX metrics.",
+                    "type": "long",
+                    "default": "8183"
+                },
+                {
+                    "name": "gremlin.server.java.opts",
+                    "type": "string",
+                    "default": " ",
+                    "label": "GremlinServer Java options",
+                    "description": "Additional configuration for variable GREMLIN_SERVER_JAVA_OPTS that will be passed down to the JVM running GremlinServer.",
+                    "required": "false"
+                },
+                {
+                    "name": "cfg.mgmt.hbase.table",
+                    "type": "string",
+                    "default": "jgraph:cfg_mgmt",
+                    "label": "openTSDB Configuration management HBase table",
+                    "description": "openTSDB Configuration management HBase table. Make sure the user has rights to create the table.",
+                    "required": "false"
+                }
+            ],
+            "configWriter": {
+                "generators": [],
+                "auxConfigGenerators": [
+                    {
+                        "filename": "gremlin-server.yaml",
+                        "sourceFilename": "aux/gremlin-server.yaml"
+                    },
+                    {
+                        "filename": "opentsdb-cfg-mgmt.properties",
+                        "sourceFilename": "aux/opentsdb-cfg-mgmt.properties"
+                    },
+                    {
+                        "filename": "opentsdb-default.properties",
+                        "sourceFilename": "aux/opentsdb-default.properties"
+                    },
+                    {
+                        "filename": "opentsdb-custom.properties",
+                        "sourceFilename": "aux/opentsdb-custom.properties"
+                    },
+                    {
+                        "filename": "opentsdb-env.sh",
+                        "sourceFilename": "aux/opentsdb-env.sh"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "GREMLIN_KT_RENEWER",
+            "label": "Gremlin Kerberos Ticket Renewer",
+            "pluralLabel": "Gremlin Kerberos Ticket Renewers",
+            "startRunner": {
+                "program": "scripts/control.sh",
+                "args": [
+                    "start_kt_renewer"
+                ],
+                "environmentVariables": {
+                    "OPENTSDB_PRINCIPAL": "opentsdb/${host}",
+                    "KERBEROS_AUTH_ENABLED": "${kerberos.auth.enable}",
+                    "KT_RENEW_INTERVAL": "${kt.renew.interval.sec}"
+                }
+            },
+            "stopRunner": {
+                "timeout": "30000"
+            },
+            "kerberosPrincipals": [
+                {
+                    "name": "OPENTSDB_PRINCIPAL",
+                    "primary": "opentsdb",
+                    "instance": "${host}"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "kt.renew.interval.sec",
+                    "label": "Kerberos Ticket Renewer interval",
+                    "description": "Kerberos Ticket Renewer interval",
+                    "type": "long",
+                    "default": "600"
+                }
+            ],
+            "configWriter": {
+                "generators": [],
+                "auxConfigGenerators": []
+            }
+        }
+    ],
+    "gateway": {
+        "alternatives": {
+            "name": "opentsdb-conf",
+            "priority": 50,
+            "linkRoot": "/etc/opentsdb"
+        },
+        "scriptRunner": {
+            "program": "scripts/control.sh",
+            "args": [
+                "client_config"
+            ]
+        },
+        "configWriter": {
+            "generators": [],
+            "auxConfigGenerators": [
+                {
+                    "filename": "opentsdb-conf/gremlin-client.yaml",
+                    "sourceFilename": "aux/gremlin-client.yaml"
+                },
+                {
+                    "filename": "opentsdb-conf/opentsdb-env.sh",
+                    "sourceFilename": "aux/opentsdb-env.sh"
+                },
+                {
+                    "filename": "opentsdb-conf/opentsdb-default.properties",
+                    "sourceFilename": "aux/opentsdb-default.properties"
+                },
+                {
+                    "filename": "opentsdb-conf/opentsdb-custom.properties",
+                    "sourceFilename": "aux/opentsdb-custom.properties"
+                }
+            ],
+            "peerConfigGenerators": [
+                {
+                    "filename": "opentsdb-conf/gremlin-servers.properties",
+                    "refreshable": false,
+                    "params": [
+                        "gremlin.server.port"
+                    ],
+                    "roleName": "GREMLIN_SERVER"
+                }
+            ]
+        }
+    }
+}

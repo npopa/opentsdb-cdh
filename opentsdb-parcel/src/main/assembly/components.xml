@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<component>
+	<fileSets>
+		<fileSet>
+			<directory>${basedir}/target/meta</directory>
+			<outputDirectory>meta</outputDirectory>
+			<fileMode>0755</fileMode>
+			<directoryMode>0755</directoryMode>
+		</fileSet>
+        <fileSet>
+            <directory>${basedir}/lib</directory>
+            <outputDirectory>lib</outputDirectory>
+            <fileMode>0755</fileMode>
+            <directoryMode>0755</directoryMode>
+        </fileSet>   
+		<fileSet>
+			<directory>target/tmp/${opentsdb.package}</directory>
+			<includes>
+				<include>**/*</include>
+			</includes>
+			<outputDirectory>/${opentsdb.package}</outputDirectory>
+		</fileSet>
+	</fileSets>
+</component>

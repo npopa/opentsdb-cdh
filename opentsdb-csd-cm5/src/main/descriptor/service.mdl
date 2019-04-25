@@ -1,0 +1,17 @@
+{
+    "name": "OPENTSDB",
+    "nameForCrossEntityAggregateMetrics": "opentsdbs",
+    "version": "${opentsdb.version}",
+    "metricDefinitions": [],
+    "metricEntityAttributeDefinitions": [],
+    "metricEntityTypeDefinitions": [],
+    "roles": [
+        {
+            "name": "GREMLIN_SERVER",
+            "metricDefinitions": [
+            ]
+        }
+    ]
+}
+
+

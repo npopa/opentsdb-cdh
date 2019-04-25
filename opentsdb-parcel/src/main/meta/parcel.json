@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "name": "OPENTSDB",
+  "version": "${opentsdb.version}-${buildNo}",
+  "extraVersionInfo": {
+    "fullVersion": "${opentsdb.version}",
+    "baseVersion": "${opentsdb.version}",
+    "patchCount": "0"
+  },
+  "setActiveSymlink": true,
+  "depends": "CDH (>= 5.5), CDH (<< 7.0)",
+  "replaces": "",
+  "conflicts": "",
+
+  "provides": [
+    "opentsdb"
+  ],
+
+  "scripts": {
+    "defines": "opentsdb_env.sh"
+  },
+  "packages": [
+    { "name"   : "opentsdb",
+      "version": "${opentsdb.version}"
+    }
+  ],
+  "components": [
+    { "name"   : "opentsdb",
+      "version": "${opentsdb.version}"
+    }
+  ],
+
+  "users": {
+    "opentsdb": {
+      "longname"    : "opentsdb user",
+      "home"        : "/var/lib/opentsdb",
+      "shell"       : "/sbin/nologin",
+      "extra_groups": [ "opentsdb" ]
+    }
+  },
+
+  "groups": [
+    "opentsdb"
+  ]
+}
