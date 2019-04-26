@@ -27,9 +27,6 @@
         },
         {
             "name": "HBASE"
-        },
-        {
-            "name": "SOLR"
         }
     ],
     "kerberos": "${kerberos.auth.enable}",
@@ -46,9 +43,9 @@
     "commands": [],
     "roles": [
         {
-            "name": "GREMLIN_SERVER",
-            "label": "Gremlin Server",
-            "pluralLabel": "Gremlin Servers",
+            "name": "TSD",
+            "label": "Time Series Daemon",
+            "pluralLabel": "Time Series Daemons",
             "jvmBased": "true",
             "startRunner": {
                 "program": "scripts/control.sh",
@@ -58,26 +55,26 @@
                 "environmentVariables": {
                     "OPENTSDB_PRINCIPAL": "opentsdb/${host}",
                     "KERBEROS_AUTH_ENABLED": "${kerberos.auth.enable}",
-                    "GREMLIN_SERVER_JAVA_OPTS": "${gremlin.server.java.opts}",
-                    "GREMLIN_PORT": "${gremlin.server.port}",
-                    "OPENTSDB_LOG4J": "gremlin-server-log4j.properties",
+                    "TSD_JAVA_OPTS": "${tsd.java.opts}",
+                    "TSD_PORT": "${tsd.port}",
+                    "OPENTSDB_LOG4J": "tsd-log4j.properties",
                     "OPENTSDB_LOGDIR": "${log_dir}",
-                    "GREMLIN_SERVER_HEAP_SIZE": "${gremlin.server.heap.size}",
-                    "GREMLIN_SERVER_METRICS_PORT": "${gremlin.server.metrics.port}",
+                    "TSD_HEAP_SIZE": "${tsd.heap.size}",
+                    "TSD_METRICS_PORT": "${tsd.metrics.port}",
                     "CFG_MGMT_HBASE_TABLE": "${cfg.mgmt.hbase.table}"
                 }
             },
             "metricsSource": {
                 "metricsFormat": "JMX",
                 "httpSource": {
-                    "httpUrl": "http://${host}:${gremlin.server.metrics.port}/jmx",
-                    "httpsUrl": "https://${host}:${gremlin.server.metrics.port}/jmx"
+                    "httpUrl": "http://${host}:${tsd.metrics.port}/jmx",
+                    "httpsUrl": "https://${host}:${tsd.metrics.port}/jmx"
                 }
             },
             "externalLink": {
                 "name": "gremlin_server_jmx",
-                "label": "Gremlin Server Web JMX",
-                "url": "http://${host}:${gremlin.server.metrics.port}/jmx"
+                "label": "Time Series Daemon Web JMX",
+                "url": "http://${host}:${tsd.metrics.port}/jmx"
             },
             "stopRunner": {
                 "timeout": "30000"
@@ -91,43 +88,43 @@
             ],
             "logging": {
                 "dir": "/var/log/opentsdb",
-                "filename": "gremlin-server.log",
+                "filename": "tsd.log",
                 "configName": "log.dir",
-                "configFilename": "gremlin-server-log4j.properties",
+                "configFilename": "tsd-log4j.properties",
                 "modifiable": true,
                 "loggingType": "log4j",
                 "additionalConfigs": []
             },
             "parameters": [
                 {
-                    "name": "gremlin.server.heap.size",
-                    "label": "Gremlin Server Heap Size",
-                    "description": "Heap size of the Gremlin Server.",
+                    "name": "tsd.heap.size",
+                    "label": "Time Series Daemon Heap Size",
+                    "description": "Heap size of the Time Series Daemon.",
                     "type": "memory",
                     "unit": "bytes",
                     "required": "true",
                     "default": 1073741824
                 },
                 {
-                    "name": "gremlin.server.port",
-                    "label": "Gremlin Server Port",
-                    "description": "Gremlin Server Port Description",
+                    "name": "tsd.port",
+                    "label": "Time Series Daemon Port",
+                    "description": "Time Series Daemon Port Description",
                     "type": "port",
                     "default": "8182"
                 },
                 {
-                    "name": "gremlin.server.metrics.port",
-                    "label": "Gremlin Server Web JMX Port",
+                    "name": "tsd.metrics.port",
+                    "label": "Time Series Daemon Web JMX Port",
                     "description": "Port for web JMX metrics.",
                     "type": "long",
                     "default": "8183"
                 },
                 {
-                    "name": "gremlin.server.java.opts",
+                    "name": "tsd.java.opts",
                     "type": "string",
                     "default": " ",
-                    "label": "GremlinServer Java options",
-                    "description": "Additional configuration for variable GREMLIN_SERVER_JAVA_OPTS that will be passed down to the JVM running GremlinServer.",
+                    "label": "TimeSeriesDaemon Java options",
+                    "description": "Additional configuration for variable TSD_JAVA_OPTS that will be passed down to the JVM running TimeSeriesDaemon.",
                     "required": "false"
                 },
                 {
@@ -143,8 +140,8 @@
                 "generators": [],
                 "auxConfigGenerators": [
                     {
-                        "filename": "gremlin-server.yaml",
-                        "sourceFilename": "aux/gremlin-server.yaml"
+                        "filename": "tsd.yaml",
+                        "sourceFilename": "aux/tsd.yaml"
                     },
                     {
                         "filename": "opentsdb-cfg-mgmt.properties",
@@ -166,9 +163,9 @@
             }
         },
         {
-            "name": "GREMLIN_KT_RENEWER",
-            "label": "Gremlin Kerberos Ticket Renewer",
-            "pluralLabel": "Gremlin Kerberos Ticket Renewers",
+            "name": "TSD_KT_RENEWER",
+            "label": "TSD Kerberos Ticket Renewer",
+            "pluralLabel": "TSD Kerberos Ticket Renewers",
             "startRunner": {
                 "program": "scripts/control.sh",
                 "args": [
@@ -239,12 +236,12 @@
             ],
             "peerConfigGenerators": [
                 {
-                    "filename": "opentsdb-conf/gremlin-servers.properties",
+                    "filename": "opentsdb-conf/tsds.properties",
                     "refreshable": false,
                     "params": [
-                        "gremlin.server.port"
+                        "tsd.port"
                     ],
-                    "roleName": "GREMLIN_SERVER"
+                    "roleName": "TSD"
                 }
             ]
         }

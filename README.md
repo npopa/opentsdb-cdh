@@ -1,4 +1,5 @@
 # openTSDB - Cloudera Parcel/CSD
+## - this is a work in progress and not yet functional 
 
 ### Building the project
 
@@ -23,7 +24,7 @@ cd ~ && git clone https://github.com/npopa/opentsdb-cdh
 
 #build repository
 export JAVA_HOME=/usr/java/default
-cd ~/opentsdb-cdh && mvn clean package
+cd ~/opentsdb-cdh && git pull && mvn clean package
 
 ```
 
