@@ -83,7 +83,7 @@ case $CMD in
         #start tsd-server  
         cmd="$JAVA $JAVA_OPTIONS \
                   -classpath $OPENTSDB_CLASSPATH \
-                  net.opentsdb.tools.$MAINCLASS
+                  net.opentsdb.tools.$MAINCLASS"
         exec ${cmd}
         ;;
     (start_kt_renewer)
