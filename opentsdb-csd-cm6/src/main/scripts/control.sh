@@ -96,7 +96,8 @@ case $CMD in
         ;;    
     (client_config)
         
-        #generate/adjust opentsdb.conf       
+        #generate/adjust opentsdb.conf  
+        echo "Done."     
         ;;        
     (*)
         echo "Unknown command ${CMD}"
