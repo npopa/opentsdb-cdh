@@ -1,28 +1,25 @@
 #!/bin/bash
 
-export OPENTSDB_BIN=${OPENTSDB_HOME}/bin
-export OPENTSDB_CFG=${OPENTSDB_HOME}/conf/gremlin-server
-export OPENTSDB_LIB=${OPENTSDB_HOME}/lib
-export OPENTSDB_EXT=${OPENTSDB_HOME}/ext
-
+export OPENTSDB_BIN=${OPENTSDB_HOME}/usr/share/opentsdb/bin
+export OPENTSDB_CFG=${OPENTSDB_HOME}/usr/share/opentsdb/etc
+export OPENTSDB_LIB=${OPENTSDB_HOME}/usr/share/opentsdb/lib
+export OPENTSDB_PLUGINS=${OPENTSDB_HOME}/usr/share/opentsdb/plugins
+export OPENTSDB_STATIC=${OPENTSDB_HOME}/usr/share/opentsdb/static
+export OPENTSDB_TOOLS=${OPENTSDB_HOME}/usr/share/opentsdb/tools
+export OPENTSDB_LOG_DIR=/var/log/opentsdb
 
 # Initialize classpath to $CFG
 OPENTSDB_CLASSPATH="$OPENTSDB_CFG"
 
-# Add the slf4j-log4j12 binding
-OPENTSDB_CLASSPATH="$OPENTSDB_CLASSPATH":$(find -L $OPENTSDB_LIB -name 'slf4j-log4j12*.jar' | sort | tr '\n' ':')
-
-# Add the jars in $OPENTSDB_LIB that start with "opentsdb" first
-OPENTSDB_CLASSPATH="$OPENTSDB_CLASSPATH":$(find -L $OPENTSDB_LIB -name 'opentsdb*.jar' | sort | tr '\n' ':')
-
-# Add the remaining jars in $OPENTSDB_LIB.
-#TODO - need to check hbase-shaded-* removal and add the CDH ones
-#               \! -name 'hbase-shaded-*' " \
+# Add the jars in $OPENTSDB_LIB that start with "tsdb" first
+OPENTSDB_CLASSPATH="$OPENTSDB_CLASSPATH":$(find -L $OPENTSDB_LIB -name 'tsdb*.jar' | sort | tr '\n' ':')
+# Add the rest of the jars in $OPENTSDB_LIB
 OPENTSDB_CLASSPATH="$OPENTSDB_CLASSPATH":$(find -L $OPENTSDB_LIB -name '*.jar' \
-                \! -name 'opentsdb*' \
-                \! -name 'slf4j-log4j12*.jar' | sort | tr '\n' ':')
-# Add the jars in $OPENTSDB_EXT (at any subdirectory depth)
-OPENTSDB_CLASSPATH="$OPENTSDB_CLASSPATH":$(find -L $OPENTSDB_EXT -name '*.jar' | sort | tr '\n' ':')
+                \! -name 'tsdb*' | sort | tr '\n' ':')
+                
+# Add the jars in $OPENTSDB_PLUGINS (at any subdirectory depth). Maybe?
+#OPENTSDB_CLASSPATH="$OPENTSDB_CLASSPATH":$(find -L $OPENTSDB_PLUGINS -name '*.jar' | sort | tr '\n' ':')
+
 # Add hbase configuration
 OPENTSDB_CLASSPATH="$OPENTSDB_CLASSPATH":"/etc/hbase/conf"
 

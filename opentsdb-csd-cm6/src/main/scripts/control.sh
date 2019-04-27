@@ -33,7 +33,8 @@ if [[ ${TSD_METRICS_PORT} -gt 0 ]]; then
 JAVA_OPTIONS="${JAVA_OPTIONS} -javaagent:$OPENTSDB_PARCEL/lib/jmx-json-javaagent.jar=${TSD_METRICS_PORT}"
 fi
 JAVA_OPTIONS="${JAVA_OPTIONS} -Xmx${TSD_HEAP_SIZE} ${TSD_JAVA_OPTS}"
-echo $JAVA_OPTIONS
+JAVA_OPTIONS="${JAVA_OPTIONS} -enableassertions -enablesystemassertions"
+
 
 
 # Execute the application and return its exit code
@@ -62,42 +63,27 @@ Client {
     fi
     echo "${JAAS_CONFIGS}" > $CONF_DIR/tsd-jaas.conf
 
-    # WA till I figure how to make openTSDB/GremlinServer work with a keytab.
+    # WA till I figure how to make openTSDB work with a keytab.
     # Just doing a kinit for now. Should be good for few hours of testing
     # TODO: Need to spawn another re-newer process.
     export KRB_KINIT_ADDL_OPTS="-l 600"
     kinit -kt ${KEYTAB_FILE} $OPENTSDB_PRINCIPAL ${KERBEROS_ADDL_OPTS}
+    JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.security.auth.login.config=tsd-jaas.conf"
 fi
-                   
-#-Dlog4j.debug=true \
-#-Dsun.security.krb5.debug=true \
 
+JAVA_OPTIONS="${JAVA_OPTIONS} -DLOG_FILE=${OPENTSDB_LOG_DIR}/opentsdb.log"
+JAVA_OPTIONS="${JAVA_OPTIONS} -DQUERY_LOG=${OPENTSDB_LOG_DIR}/queries.log"
+
+echo $JAVA_OPTIONS
 case $CMD in
-    (start_server)
+    (start_tsd)
+        MAINCLASS=TSDMain
+        #generate/adjust opentsdb.conf
         
-        #generate opentsdb.properties files for all the defined graphs
-        GRAPHS=$(grep '=' opentsdb-custom.properties|grep -v '#'|tr -d "\t "|cut -d "." -f1|sort|uniq)
-        for GRAPH in $GRAPHS; do
-            echo "Generating config for: $GRAPH"
-            \cp -f opentsdb-default.properties opentsdb-${GRAPH}.properties
-            grep '=' opentsdb-custom.properties|grep -v '#'|tr -d "\t "|grep "^${GRAPH}"|sed "s/^${GRAPH}.//g">>opentsdb-${GRAPH}.properties
-            #update tsd-server.yaml with the user defined graphs
-            if [[ $(grep ${GRAPH} tsd-server.yaml|wc -l) == 0 ]]; then
-                #add definition to yaml
-                echo "Adding config for: $GRAPH to tsd-server.yaml"
-                sed -i "/graphs: {/a \ \ ${GRAPH}: opentsdb-${GRAPH}.properties," tsd-server.yaml
-            fi
-        done
-        sed -i "s/^port:.*$/port: ${TSD_PORT}/g" tsd-server.yaml
-        
-        #start tsd-server
-        cmd="$JAVA -Dopentsdb.logdir=${OPENTSDB_LOGDIR} \
-                   -Dlog4j.configuration=${OPENTSDB_LOG4J} \
-                   -Djava.security.auth.login.config=tsd-jaas.conf \
-                   $JAVA_OPTIONS \
-                   -cp $OPENTSDB_CLASSPATH \
-                   org.apache.tinkerpop.gremlin.server.GremlinServer ${CONF_DIR}/tsd-server.yaml"        
-
+        #start tsd-server  
+        cmd="$JAVA $JAVA_OPTIONS \
+                  -classpath $OPENTSDB_CLASSPATH \
+                  net.opentsdb.tools.$MAINCLASS
         exec ${cmd}
         ;;
     (start_kt_renewer)
@@ -109,19 +95,8 @@ case $CMD in
         exec ${cmd}
         ;;    
     (client_config)
-        TSDS=$(cat opentsdb-conf/tsd-servers.properties|cut -d":" -f1 |tr '\n' ','|sed 's/,*$//g')
-        TSD_PORT=$(cat opentsdb-conf/tsd-servers.properties|cut -d"=" -f2 |head -1)
-        sed -i "s/__TSDS__/${TSDS}/g" opentsdb-conf/tsd-client.yaml
-        sed -i "s/__TSD_PORT__/${TSD_PORT}/g" opentsdb-conf/tsd-client.yaml
         
-        #generate opentsdb.properties files for all the defined graphs
-        GRAPHS=$(grep '=' opentsdb-conf/opentsdb-custom.properties|grep -v '#'|tr -d "\t "|cut -d "." -f1|sort|uniq)
-        for GRAPH in $GRAPHS; do
-            echo "Generating config for: $GRAPH"
-            \cp -f opentsdb-conf/opentsdb-default.properties opentsdb-conf/opentsdb-${GRAPH}.properties
-            grep '=' opentsdb-conf/opentsdb-custom.properties|grep -v '#'|tr -d "\t "|grep "^${GRAPH}"|sed "s/^${GRAPH}.//g">>opentsdb-conf/opentsdb-${GRAPH}.properties
-        done
-        
+        #generate/adjust opentsdb.conf       
         ;;        
     (*)
         echo "Unknown command ${CMD}"

@@ -50,7 +50,7 @@
             "startRunner": {
                 "program": "scripts/control.sh",
                 "args": [
-                    "start_server"
+                    "start_tsd"
                 ],
                 "environmentVariables": {
                     "OPENTSDB_PRINCIPAL": "opentsdb/${host}",
@@ -61,7 +61,11 @@
                     "OPENTSDB_LOGDIR": "${log_dir}",
                     "TSD_HEAP_SIZE": "${tsd.heap.size}",
                     "TSD_METRICS_PORT": "${tsd.metrics.port}",
-                    "CFG_MGMT_HBASE_TABLE": "${cfg.mgmt.hbase.table}"
+                    "TSDB_TABLE": "${tsd.storage.hbase.data_table}",
+                    "UID_TABLE": "${tsd.storage.hbase.uid_table}",
+                    "TREE_TABLE": "${tsd.storage.hbase.tree_table}",
+                    "META_TABLE": "${tsd.storage.hbase.meta_table}",
+                    "OPENTSDB_COMPRESSION": "${tsd.storage.hbase.compression}"                     
                 }
             },
             "metricsSource": {
@@ -72,7 +76,7 @@
                 }
             },
             "externalLink": {
-                "name": "gremlin_server_jmx",
+                "name": "tsd_jmx",
                 "label": "Time Series Daemon Web JMX",
                 "url": "http://${host}:${tsd.metrics.port}/jmx"
             },
@@ -110,14 +114,14 @@
                     "label": "Time Series Daemon Port",
                     "description": "Time Series Daemon Port Description",
                     "type": "port",
-                    "default": "8182"
+                    "default": "4242"
                 },
                 {
                     "name": "tsd.metrics.port",
                     "label": "Time Series Daemon Web JMX Port",
                     "description": "Port for web JMX metrics.",
                     "type": "long",
-                    "default": "8183"
+                    "default": "4243"
                 },
                 {
                     "name": "tsd.java.opts",
@@ -128,32 +132,52 @@
                     "required": "false"
                 },
                 {
-                    "name": "cfg.mgmt.hbase.table",
+                    "name": "tsd.storage.hbase.data_table",
                     "type": "string",
-                    "default": "jgraph:cfg_mgmt",
-                    "label": "openTSDB Configuration management HBase table",
-                    "description": "openTSDB Configuration management HBase table. Make sure the user has rights to create the table.",
+                    "default": "opentsdb:tsdb",
+                    "label": "TSDB_TABLE",
+                    "description": "Name of the HBase table where data points are stored",
                     "required": "false"
-                }
+                },
+                {
+                    "name": "tsd.storage.hbase.uid_table",
+                    "type": "string",
+                    "default": "opentsdb:tsdb-uid",
+                    "label": "UID_TABLE",
+                    "description": "Name of the HBase table where UID information is stored",
+                    "required": "false"
+                },
+                {
+                    "name": "tsd.storage.hbase.tree_table",
+                    "type": "string",
+                    "default": "opentsdb:tsdb-tree",
+                    "label": "TREE_TABLE",
+                    "description": "Name of the HBase table where tree data are stored",
+                    "required": "false"
+                },
+                {
+                    "name": "tsd.storage.hbase.meta_table",
+                    "type": "string",
+                    "default": "opentsdb:tsdb-meta",
+                    "label": "META_TABLE",
+                    "description": "Name of the HBase table where meta data are stored",
+                    "required": "false"
+                },
+                {
+                    "name": "tsd.storage.hbase.compression",
+                    "type": "string",
+                    "default": "snappy",
+                    "label": "OPENTSDB_COMPRESSION",
+                    "description": "OpenTSDB HBase table compression",
+                    "required": "false"
+                }                     
             ],
             "configWriter": {
                 "generators": [],
                 "auxConfigGenerators": [
                     {
-                        "filename": "tsd.yaml",
-                        "sourceFilename": "aux/tsd.yaml"
-                    },
-                    {
-                        "filename": "opentsdb-cfg-mgmt.properties",
-                        "sourceFilename": "aux/opentsdb-cfg-mgmt.properties"
-                    },
-                    {
-                        "filename": "opentsdb-default.properties",
-                        "sourceFilename": "aux/opentsdb-default.properties"
-                    },
-                    {
-                        "filename": "opentsdb-custom.properties",
-                        "sourceFilename": "aux/opentsdb-custom.properties"
+                        "filename": "opentsdb.conf",
+                        "sourceFilename": "aux/opentsdb.conf"
                     },
                     {
                         "filename": "opentsdb-env.sh",
@@ -218,20 +242,12 @@
             "generators": [],
             "auxConfigGenerators": [
                 {
-                    "filename": "opentsdb-conf/gremlin-client.yaml",
-                    "sourceFilename": "aux/gremlin-client.yaml"
-                },
-                {
                     "filename": "opentsdb-conf/opentsdb-env.sh",
                     "sourceFilename": "aux/opentsdb-env.sh"
                 },
                 {
-                    "filename": "opentsdb-conf/opentsdb-default.properties",
-                    "sourceFilename": "aux/opentsdb-default.properties"
-                },
-                {
-                    "filename": "opentsdb-conf/opentsdb-custom.properties",
-                    "sourceFilename": "aux/opentsdb-custom.properties"
+                    "filename": "opentsdb-conf/opentsdb.conf",
+                    "sourceFilename": "aux/opentsdb.conf"
                 }
             ],
             "peerConfigGenerators": [
