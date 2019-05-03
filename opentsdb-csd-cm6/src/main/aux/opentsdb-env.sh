@@ -7,6 +7,7 @@ export OPENTSDB_PLUGINS=${OPENTSDB_HOME}/usr/share/opentsdb/plugins
 export OPENTSDB_STATIC=${OPENTSDB_HOME}/usr/share/opentsdb/static
 export OPENTSDB_TOOLS=${OPENTSDB_HOME}/usr/share/opentsdb/tools
 export OPENTSDB_LOG_DIR=/var/log/opentsdb
+export OPENTSDB_CACHE=/tmp/tsd
 
 # Initialize classpath to $CFG
 OPENTSDB_CLASSPATH="$OPENTSDB_CFG"
@@ -24,5 +25,7 @@ OPENTSDB_CLASSPATH="$OPENTSDB_CLASSPATH":$(find -L $OPENTSDB_LIB -name '*.jar' \
 OPENTSDB_CLASSPATH="$OPENTSDB_CLASSPATH":"/etc/hbase/conf"
 
 export OPENTSDB_CLASSPATH
+
+env
 
 # Below this line is Cloudera Manager configured content, above is parcel default

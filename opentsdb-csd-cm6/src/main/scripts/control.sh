@@ -79,11 +79,23 @@ case $CMD in
     (start_tsd)
         MAINCLASS=TSDMain
         #generate/adjust opentsdb.conf
-        
+        if [ -n "$TSD_PORT" ]; then 
+          echo "tsd.network.port = ${TSD_PORT}">>opentsdb.conf
+        fi
+        echo "tsd.http.staticroot = ${OPENTSDB_STATIC}">>opentsdb.conf
+        echo "tsd.http.cachedir = ${OPENTSDB_CACHE}">>opentsdb.conf 
+        echo "tsd.storage.hbase.data_table =  ${TSDB_TABLE}">>opentsdb.conf 
+        echo "tsd.storage.hbase.meta_table =  ${META_TABLE}">>opentsdb.conf 
+        echo "tsd.storage.hbase.uid_table =  ${UID_TABLE}">>opentsdb.conf 
+        echo "tsd.storage.hbase.tree_table =  ${TREE_TABLE}">>opentsdb.conf 
+                                                                
         #start tsd-server  
         cmd="$JAVA $JAVA_OPTIONS \
                   -classpath $OPENTSDB_CLASSPATH \
-                  net.opentsdb.tools.$MAINCLASS"
+                  net.opentsdb.tools.$MAINCLASS" \
+                  --port=${TSD_PORT} \
+                  --staticroot=${OPENTSDB_STATIC} \
+                  --cachedir=${OPENTSDB_CACHE}
         exec ${cmd}
         ;;
     (start_kt_renewer)

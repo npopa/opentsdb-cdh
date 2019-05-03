@@ -37,6 +37,7 @@ cd ~/opentsdb-cdh && git pull && mvn clean package
 
 #restart CM & CM Service after that
 #service cloudera-scm-server restart
+#or http://localhost:7180/cmf/csd/reinstall?csdName=OPENTSDB-2.4.0-CM6
 
 ```
 * Install parcel
