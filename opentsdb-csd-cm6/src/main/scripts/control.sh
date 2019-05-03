@@ -89,7 +89,8 @@ case $CMD in
         echo "tsd.storage.hbase.meta_table =  ${META_TABLE}">>opentsdb.conf 
         echo "tsd.storage.hbase.uid_table =  ${UID_TABLE}">>opentsdb.conf 
         echo "tsd.storage.hbase.tree_table =  ${TREE_TABLE}">>opentsdb.conf 
-                                                                
+        echo "tsd.storage.hbase.zk_quorum =  ${ZK_QUOROM}">>opentsdb.conf 
+                                                                        
         #start tsd-server  
         cmd="$JAVA $JAVA_OPTIONS \
                   -classpath $OPENTSDB_CLASSPATH \
