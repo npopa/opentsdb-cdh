@@ -59,6 +59,15 @@ Client {
   debug=true
   keyTab=\"$KEYTAB_FILE\"
   principal=\"$OPENTSDB_PRINCIPAL\";
+};
+TSDClient {
+  com.sun.security.auth.module.Krb5LoginModule required
+  useKeyTab=true
+  storeKey=true
+  useTicketCache=false
+  debug=true
+  keyTab=\"$KEYTAB_FILE\"
+  principal=\"$OPENTSDB_PRINCIPAL\";
 };"
     fi
     echo "${JAAS_CONFIGS}" > $CONF_DIR/tsd-jaas.conf
@@ -69,6 +78,11 @@ Client {
     export KRB_KINIT_ADDL_OPTS="-l 600"
     kinit -kt ${KEYTAB_FILE} $OPENTSDB_PRINCIPAL ${KERBEROS_ADDL_OPTS}
     JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.security.auth.login.config=tsd-jaas.conf"
+    export REALM=$(echo $OPENTSDB_PRINCIPAL|cut -f2 -d"@")
+    echo "hbase.security.auth.enable = true>>opentsdb.conf
+    echo "hbase.security.authentication = kerberos>>opentsdb.conf
+    echo "hbase.sasl.clientconfig = TSDClient>>opentsdb.conf
+    echo "hbase.kerberos.regionserver.principal = hbase/_HOST@${REALM}>>opentsdb.conf                            
 fi
 
 JAVA_OPTIONS="${JAVA_OPTIONS} -DLOG_FILE=${OPENTSDB_LOG_DIR}/opentsdb.log"
