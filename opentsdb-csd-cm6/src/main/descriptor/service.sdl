@@ -92,7 +92,7 @@
             ],
             "logging": {
                 "dir": "/var/log/opentsdb",
-                "filename": "tsd.log",
+                "filename": "opentsdb.log",
                 "configName": "log.dir",
                 "configFilename": "tsd-log4j.properties",
                 "modifiable": true,
@@ -103,11 +103,13 @@
                 {
                     "name": "tsd.heap.size",
                     "label": "Time Series Daemon Heap Size",
-                    "description": "Heap size of the Time Series Daemon.",
+                    "description": "Maximum Hhap size of the Time Series Daemon.",
                     "type": "memory",
                     "unit": "bytes",
                     "required": "true",
-                    "default": 1073741824
+                    "min" : 67108864,
+                    "default": 1073741824,
+                    "scaleFactor" : "1.3"
                 },
                 {
                     "name": "tsd.port",
