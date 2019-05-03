@@ -84,6 +84,7 @@ case $CMD in
         fi
         echo "tsd.http.staticroot = ${OPENTSDB_STATIC}">>opentsdb.conf
         echo "tsd.http.cachedir = ${OPENTSDB_CACHE}">>opentsdb.conf 
+        echo "tsd.core.plugin_path = ${OPENTSDB_PLUGINS}">>opentsdb.conf         
         echo "tsd.storage.hbase.data_table =  ${TSDB_TABLE}">>opentsdb.conf 
         echo "tsd.storage.hbase.meta_table =  ${META_TABLE}">>opentsdb.conf 
         echo "tsd.storage.hbase.uid_table =  ${UID_TABLE}">>opentsdb.conf 
