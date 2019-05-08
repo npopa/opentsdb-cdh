@@ -10,7 +10,7 @@ export OPENTSDB_LOG_DIR=/var/log/opentsdb
 export OPENTSDB_CACHE=/tmp/tsd
 
 # Initialize classpath to $CFG
-OPENTSDB_CLASSPATH="$OPENTSDB_CFG"
+OPENTSDB_CLASSPATH="$OPENTSDB_CFG/opentsdb"
 
 # Add the jars in $OPENTSDB_LIB that start with "tsdb" first
 OPENTSDB_CLASSPATH="$OPENTSDB_CLASSPATH":$(find -L $OPENTSDB_LIB -name 'tsdb*.jar' | sort | tr '\n' ':')
