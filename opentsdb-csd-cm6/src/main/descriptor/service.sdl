@@ -104,6 +104,7 @@
                     "name": "tsd.heap.size",
                     "label": "Time Series Daemon Heap Size",
                     "description": "Maximum Hhap size of the Time Series Daemon.",
+                    "configurableInWizard": true,
                     "type": "memory",
                     "unit": "bytes",
                     "required": "true",
@@ -115,6 +116,7 @@
                     "name": "tsd.port",
                     "label": "Time Series Daemon Port",
                     "description": "Time Series Daemon Port Description",
+                    "configurableInWizard": true,
                     "type": "port",
                     "default": "4242"
                 },
@@ -122,6 +124,7 @@
                     "name": "tsd.metrics.port",
                     "label": "Time Series Daemon Web JMX Port",
                     "description": "Port for web JMX metrics.",
+                    "configurableInWizard": true,
                     "type": "long",
                     "default": "4243"
                 },
@@ -135,42 +138,47 @@
                 },
                 {
                     "name": "tsd.storage.hbase.data_table",
-                    "type": "string",
-                    "default": "opentsdb:tsdb",
                     "label": "TSDB_TABLE",
                     "description": "Name of the HBase table where data points are stored",
+                    "configurableInWizard": true,                   
+                    "type": "string",
+                    "default": "opentsdb:tsdb",
                     "required": "false"
                 },
                 {
                     "name": "tsd.storage.hbase.uid_table",
+                    "label": "UID_TABLE",
+                    "description": "Name of the HBase table where UID information is stored", 
+                    "configurableInWizard": true,                                           
                     "type": "string",
                     "default": "opentsdb:tsdb-uid",
-                    "label": "UID_TABLE",
-                    "description": "Name of the HBase table where UID information is stored",
                     "required": "false"
                 },
                 {
                     "name": "tsd.storage.hbase.tree_table",
-                    "type": "string",
-                    "default": "opentsdb:tsdb-tree",
                     "label": "TREE_TABLE",
                     "description": "Name of the HBase table where tree data are stored",
+                    "configurableInWizard": true,                      
+                    "type": "string",
+                    "default": "opentsdb:tsdb-tree",
                     "required": "false"
                 },
                 {
                     "name": "tsd.storage.hbase.meta_table",
+                    "label": "META_TABLE",
+                    "description": "Name of the HBase table where meta data are stored", 
+                    "configurableInWizard": true,                                        
                     "type": "string",
                     "default": "opentsdb:tsdb-meta",
-                    "label": "META_TABLE",
-                    "description": "Name of the HBase table where meta data are stored",
                     "required": "false"
                 },
                 {
                     "name": "tsd.storage.hbase.compression",
+                    "label": "OPENTSDB_COMPRESSION",
+                    "description": "OpenTSDB HBase table compression",  
+                    "configurableInWizard": true,                                          
                     "type": "string",
                     "default": "snappy",
-                    "label": "OPENTSDB_COMPRESSION",
-                    "description": "OpenTSDB HBase table compression",
                     "required": "false"
                 }                     
             ],
