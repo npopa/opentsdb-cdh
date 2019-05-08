@@ -192,7 +192,11 @@
                     {
                         "filename": "opentsdb-env.sh",
                         "sourceFilename": "aux/opentsdb-env.sh"
-                    }
+                    },
+                    {
+                        "filename": "logback.xml",
+                        "sourceFilename": "aux/logback.xml"
+                    }   
                 ]
             }
         },
@@ -258,7 +262,11 @@
                 {
                     "filename": "opentsdb-conf/opentsdb.conf",
                     "sourceFilename": "aux/opentsdb.conf"
-                }
+                },
+                {
+                    "filename": "opentsdb-conf/logback.xml",
+                    "sourceFilename": "aux/logback.xml"
+                }                
             ],
             "peerConfigGenerators": [
                 {
