@@ -17,11 +17,14 @@ yum install -y git
 
 ```
 
-* Build 
+* Clone repo 
 ``` shell
 #clone repository
 cd ~ && git clone https://github.com/npopa/opentsdb-cdh
+```
 
+* Build
+```
 #build repository
 export JAVA_HOME=/usr/java/default
 cd ~/opentsdb-cdh && git pull && mvn clean package

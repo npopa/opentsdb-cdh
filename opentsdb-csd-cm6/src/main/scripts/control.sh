@@ -41,8 +41,12 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -enableassertions -enablesystemassertions"
 # Execute the application and return its exit code
 set -x
 
-export CLASSPATH="${CLASSPATH}:${CONF_DIR}:${CONF_DIR}/hbase-conf"
+export OPENTSDB_CLASSPATH="${OPENTSDB_CLASSPATH}:${CONF_DIR}:${CONF_DIR}/hbase-conf"
 
+#leave a hook for user to add things to the classpath in OPENTSDB_AUX_CLASSPATH
+if [ -n "$OPENTSDB_AUX_CLASSPATH" ]; then 
+    export OPENTSDB_CLASSPATH="${OPENTSDB_CLASSPATH}:${OPENTSDB_AUX_CLASSPATH}"
+fi
 
 # Generate JAAS config file
 # openTSDB does not seem to know how to work with this.?

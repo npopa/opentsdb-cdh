@@ -21,8 +21,8 @@ OPENTSDB_CLASSPATH="$OPENTSDB_CLASSPATH":$(find -L $OPENTSDB_LIB -name '*.jar' \
 # Add the jars in $OPENTSDB_PLUGINS (at any subdirectory depth). Maybe?
 #OPENTSDB_CLASSPATH="$OPENTSDB_CLASSPATH":$(find -L $OPENTSDB_PLUGINS -name '*.jar' | sort | tr '\n' ':')
 
-# Add hbase configuration
-OPENTSDB_CLASSPATH="$OPENTSDB_CLASSPATH":"/etc/hbase/conf"
+# Add hbase configuration if required?
+#OPENTSDB_CLASSPATH="$OPENTSDB_CLASSPATH":"/etc/hbase/conf"
 
 export OPENTSDB_CLASSPATH
 
