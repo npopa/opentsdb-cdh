@@ -12,6 +12,7 @@ shift
 
 echo "OPENTSDB_CLASSPATH="${OPENTSDB_CLASSPATH}
 cd ${CONF_DIR}
+ls -ltRa ${CONF_DIR}
 echo "Current path is $(pwd)"
 echo "CONF_DIR is ${CONF_DIR}"
 echo "OPENTSDB_LOGDIR is ${OPENTSDB_LOGDIR}"
@@ -87,6 +88,7 @@ fi
 
 JAVA_OPTIONS="${JAVA_OPTIONS} -DLOG_FILE=${OPENTSDB_LOG_DIR}/opentsdb.log"
 JAVA_OPTIONS="${JAVA_OPTIONS} -DQUERY_LOG=${OPENTSDB_LOG_DIR}/queries.log"
+
 
 echo $JAVA_OPTIONS
 case $CMD in
