@@ -90,7 +90,25 @@ TSDClient {
     echo "hbase.kerberos.regionserver.principal = hbase/_HOST@${REALM}">>opentsdb.conf                            
 fi
 
-JAVA_OPTIONS="${JAVA_OPTIONS} -DLOG_FILE=${OPENTSDB_LOG_DIR}/opentsdb.log"
+export OPENTSDB_LOG_FILE="opentsdb.log"
+export OPENTSDB_LOG_SIZE_MAX="128MB"
+export OPENTSDB_LOG_FILES_MAX="3"
+export OPENTSDB_LOG_LEVEL="INFO"
+
+if [[ -f ${CONF_DIR}/tsd-log4j.properties ]]; then
+    #OpenTSDB does not use log4j as CM so try and fill the gap by generating a log4j and get the values from there.
+    #TODO Maybe there is a better way to do this?
+    OPENTSDB_LOG_DIR=$(grep "^log.dir" ${CONF_DIR}/tsd-log4j.properties|cut -f2 -d "=")
+    OPENTSDB_LOG_FILE=$(grep "^log.file" ${CONF_DIR}/tsd-log4j.properties|cut -f2 -d "=")
+    OPENTSDB_LOG_SIZE_MAX=$(grep "^max.log.file.size" ${CONF_DIR}/tsd-log4j.properties|cut -f2 -d "=")
+    OPENTSDB_LOG_FILES_MAX=$(grep "^max.log.file.backup.index" ${CONF_DIR}/tsd-log4j.properties|cut -f2 -d "=")
+    OPENTSDB_LOG_LEVEL=$(grep "^log.threshold" ${CONF_DIR}/tsd-log4j.properties|cut -f2 -d "=")    
+fi
+
+JAVA_OPTIONS="${JAVA_OPTIONS} -DLOG_FILE=${OPENTSDB_LOG_DIR}/${OPENTSDB_LOG_FILE}"
+JAVA_OPTIONS="${JAVA_OPTIONS} -DOPENTSDB_LOG_SIZE_MAX=${OPENTSDB_LOG_SIZE_MAX}"
+JAVA_OPTIONS="${JAVA_OPTIONS} -DOPENTSDB_LOG_FILES_MAX=${OPENTSDB_LOG_FILES_MAX}"
+JAVA_OPTIONS="${JAVA_OPTIONS} -DOPENTSDB_LOG_LEVEL=${OPENTSDB_LOG_LEVEL}"
 JAVA_OPTIONS="${JAVA_OPTIONS} -DQUERY_LOG=${OPENTSDB_LOG_DIR}/queries.log"
 
 
