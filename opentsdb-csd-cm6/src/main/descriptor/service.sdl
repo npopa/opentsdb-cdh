@@ -80,8 +80,8 @@
             "commands" : [
             {
               "name" : "create_tables",
-              "label" : "OPENTSDB create tables",
-              "description" : "Initializes Accumulo in HDFS and ZooKeeper.",
+              "label" : "Create OPENTSDB tables",
+              "description" : "Create OPENTSDB tables",
               "expectedExitCodes" : [0],
               "requiredRoleState" : "stopped",
               "commandRunner" : {
