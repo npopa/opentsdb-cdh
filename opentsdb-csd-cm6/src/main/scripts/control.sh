@@ -41,11 +41,11 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -enableassertions -enablesystemassertions"
 # Execute the application and return its exit code
 set -x
 
-export OPENTSDB_CLASSPATH="${OPENTSDB_CLASSPATH}:${CONF_DIR}:${CONF_DIR}/hbase-conf"
+export OPENTSDB_CLASSPATH="${CONF_DIR}:${CONF_DIR}/hbase-conf:${OPENTSDB_CLASSPATH}"
 
 #leave a hook for user to add things to the classpath in OPENTSDB_AUX_CLASSPATH
 if [ -n "$OPENTSDB_AUX_CLASSPATH" ]; then 
-    export OPENTSDB_CLASSPATH="${OPENTSDB_CLASSPATH}:${OPENTSDB_AUX_CLASSPATH}"
+    export OPENTSDB_CLASSPATH="${OPENTSDB_AUX_CLASSPATH}:${OPENTSDB_CLASSPATH}"
 fi
 
 # Generate JAAS config file
