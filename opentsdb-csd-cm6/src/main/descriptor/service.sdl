@@ -40,7 +40,16 @@
             "configurableInWizard": true
         }
     ],
-    "commands": [],
+    "commands" : [
+      {
+       "name" : "create_tables",
+       "label" : "Create OPENTSDB tables",
+       "description" : "Create OPENTSDB tables",
+       "roleCommand" : "create_tables",
+       "roleName" : "TSD",
+       "runMode" : "single"
+      }
+    ],
     "roles": [
         {
             "name": "TSD",
@@ -68,6 +77,27 @@
                     "OPENTSDB_COMPRESSION": "${tsd.storage.hbase.compression}"                     
                 }
             },
+            "commands" : [
+            {
+              "name" : "create_tables",
+              "label" : "OPENTSDB create tables",
+              "description" : "Initializes Accumulo in HDFS and ZooKeeper.",
+              "expectedExitCodes" : [0],
+              "requiredRoleState" : "stopped",
+              "commandRunner" : {
+                "program" : "scripts/accumulo.sh",
+                "args" : ["init", "${accumulo_initialize}"],
+                "environmentVariables" : {
+                  "ACCUMULO_LOG_DIR" : "${log_dir}",
+                  "ACCUMULO_MASTER_OPTS" : " -Xmx${master_max_heapsize} ",
+                  "ACCUMULO_GENERAL_OPTS" : " ${accumulo_java_opts} ",
+                  "INSTANCE_NAME" : "${accumulo_instance_name}",
+                  "INSTANCE_PASSWORD" : "${accumulo_root_password}",
+                  "ACCUMULO_CLASSPATH" : "${accumulo_classpath}"
+                }
+              }
+            }
+           ],           
             "metricsSource": {
                 "metricsFormat": "JMX",
                 "httpSource": {
@@ -76,9 +106,9 @@
                 }
             },
             "externalLink": {
-                "name": "tsd_jmx",
-                "label": "Time Series Daemon Web JMX",
-                "url": "http://${host}:${tsd.metrics.port}/jmx"
+                "name": "tsd_ui",
+                "label": "Time Series Daemon Web UI",
+                "url": "http://${host}:${tsd.port}"
             },
             "stopRunner": {
                 "timeout": "30000"
